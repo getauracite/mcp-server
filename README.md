@@ -1,2 +1,2 @@
-# mcp-server
-Model Context Protocol server for AuraCite GEO analytics
+**⭐ Star this repo** if you find it useful — it helps other developers discover the MCP + GEO ecosystem.
+
