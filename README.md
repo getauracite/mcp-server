@@ -141,7 +141,7 @@ MIT
 
 - 🌐 [auracite.de](https://auracite.de)
 - 🐦 [@AuraCite](https://twitter.com/AuraCite)
-- 📧 hello@auracite.de
+- 📧 g@auracite.de
 
 ---
 
