@@ -1,135 +1,54 @@
-# AuraCite MCP Server
+# AuraCite MCP Server (Preview)
 
-> Native [Model Context Protocol](https://modelcontextprotocol.io) server for AI visibility data. Connect Claude Desktop, ChatGPT-via-MCP, or any MCP client to query real-time Generative Engine Optimization metrics.
+> Native [Model Context Protocol](https://modelcontextprotocol.io) server for AI visibility data. Planned to let Claude Desktop, Cline, Continue or any MCP client query real-time Generative Engine Optimization metrics from your [AuraCite](https://auracite.de) projects.
 
-[![NPM](https://img.shields.io/npm/v/@getauracite/mcp-server.svg)](https://www.npmjs.com/package/@getauracite/mcp-server)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![MCP](https://img.shields.io/badge/MCP-compatible-green.svg)](https://modelcontextprotocol.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-preview-orange)](#roadmap)
 
-## What is this?
+## Status: Preview
 
-The AuraCite MCP Server exposes **AI visibility analytics** as MCP tools that any MCP-compatible AI agent can call. Ask Claude Desktop things like:
+This repository is a placeholder for the upcoming public `@getauracite/mcp-server` NPM package.
 
-> "What's my brand's AI visibility score across ChatGPT and Perplexity?"
+**What is live today**
+
+- Roadmap and planned tool surface (below)
+- Public design decisions and change log
+
+**What is not live yet**
+
+- The NPM package `@getauracite/mcp-server`
+- A stable MCP tool contract
+- A public API key flow for MCP usage
+
+We will flip this repo to a working implementation **once the underlying AuraCite public API is stable** and we can commit to backwards-compatible MCP tool names.
+
+Want to be notified? Star the repo or email <g@auracite.de>.
+
+## Planned: what it will do
+
+The AuraCite MCP Server will expose AI visibility analytics as MCP tools so any MCP-compatible AI agent can ask questions like:
+
+> What is my brand`s AI visibility score across ChatGPT and Perplexity?
 >
-> "Compare the Share of AI Voice between Stripe and Adyen."
+> Which competitors do LLMs recommend instead of us?
 >
-> "Which competitors does ChatGPT recommend instead of us?"
+> Show me the last 30 days of citation trend for Brand X.
 
-And get real, empirical data back — not hallucinations.
-
-## Why MCP?
-
-LLMs hallucinate when asked about brand authority. With MCP, AI agents can call **verified data sources** (like AuraCite) instead of guessing. This is the future of accurate AI-assisted research.
-
-## Installation
-
-### Claude Desktop
-
-Add to your `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "auracite_geo": {
-      "command": "npx",
-      "args": ["-y", "@getauracite/mcp-server"],
-      "env": {
-        "AURACITE_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
-```
-
-Restart Claude Desktop. You should see the AuraCite tools available.
-
-### Get an API key
-
-1. Sign up at [auracite.de](https://auracite.de)
-2. Go to Settings → API Keys
-3. Generate a new key with scope `mcp:read`
-4. Copy into your `claude_desktop_config.json`
-
-Free tier: 100 MCP calls/month. Paid plans from €49/month.
-
-## Exposed Tools
-
-### `auracite_get_visibility_score`
-
-Get the AI Visibility Score (1–100) for a brand across all tracked engines.
-
-**Parameters:**
-- `brand_name` (string, required)
-- `engines` (array, optional) — default: `["chatgpt", "claude", "perplexity", "gemini"]`
-- `locale` (string, optional) — default: `"en"`
-
-**Example:**
-```
-Claude: "What's Stripe's AI visibility score?"
-→ Calls auracite_get_visibility_score({ brand_name: "Stripe" })
-→ Returns: { overall: 87, chatgpt: 92, claude: 85, perplexity: 81, gemini: 90 }
-```
-
-### `auracite_compare_competitors`
-
-Compare Share of AI Voice between multiple brands.
-
-**Parameters:**
-- `brands` (array, required) — 2–5 brand names
-- `topic` (string, required) — e.g. "payment processors"
-
-### `auracite_get_citations`
-
-Get the exact URLs that LLMs cite when discussing a brand.
-
-**Parameters:**
-- `brand_name` (string, required)
-- `engine` (string, optional) — specific engine or "all"
-
-### `auracite_suggest_improvements`
-
-Get actionable GEO recommendations based on current visibility data.
-
-**Parameters:**
-- `brand_name` (string, required)
-
-## Development
-
-```bash
-git clone https://github.com/getauracite/mcp-server
-cd mcp-server
-npm install
-npm run build
-npm run dev
-```
-
-Test locally:
-```bash
-AURACITE_API_KEY=xxx npx @modelcontextprotocol/inspector npx @getauracite/mcp-server
-```
-
-## Security
-
-- API keys are never logged
-- All requests over TLS 1.3
-- GDPR-compliant, EU-hosted
-- [Security policy](SECURITY.md)
+…and get real, empirical data back — not hallucinations.
 
 ## Roadmap
 
-- [x] `get_visibility_score`
-- [x] `compare_competitors`
-- [x] `get_citations`
-- [ ] `suggest_improvements` (Q2 2026)
-- [ ] `track_over_time` (Q2 2026)
-- [ ] Streaming responses for long queries
-- [ ] Rate-limit feedback via MCP
-- [ ] OAuth support (vs. API keys)
+- [ ] v0.1 — read-only tools: get visibility score, list recent citations
+- [ ] v0.2 — comparison: competitor share-of-voice
+- [ ] v0.3 — time-series: mention trend
+- [ ] v0.4 — OAuth flow (replacing static API keys)
+- [ ] v1.0 — stable tool contract, published on NPM
 
-## Contributing
+Detailed tool contracts will land in this repo **with a real implementation**, not before.
 
-PRs welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
+## Why MCP?
+
+LLMs hallucinate when asked about brand authority. With MCP, AI agents can call **verified data sources** instead of guessing. We believe this is where AI-assisted research is going, and we want AuraCite to be a first-class data source for it.
 
 ## License
 
@@ -137,12 +56,11 @@ MIT
 
 ## About AuraCite
 
-[AuraCite](https://auracite.de) is the operating system for Generative Engine Optimization. We're the first platform to offer a native MCP server for brand visibility data.
+[AuraCite](https://auracite.de) is an analytics platform for Generative Engine Optimization.
 
-- 🌐 [auracite.de](https://auracite.de)
-- 🐦 [@AuraCite](https://twitter.com/AuraCite)
-- 📧 g@auracite.de
+- Website: [auracite.de](https://auracite.de)
+- Contact: <g@auracite.de>
 
 ---
 
-**⭐ Star this repo** if you find it useful — it helps other developers discover the MCP + GEO ecosystem.
+**Star this repo** to get notified when v0.1 ships.
