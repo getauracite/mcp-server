@@ -93,7 +93,7 @@ MIT
 [AuraCite](https://auracite.de) is an analytics platform for Generative Engine Optimization with MCP-ready workflows for brand visibility data.
 
 - [auracite.de](https://auracite.de)
-- <g@auracite.de>
+- `g@auracite.de`
 
 ---
 
