@@ -1,88 +1,105 @@
-# AuraCite MCP Server Preview
+# AuraCite MCP Server
 
-> Preview roadmap for [Model Context Protocol](https://modelcontextprotocol.io) workflows around AI visibility data. Public self-service installation is not generally available yet.
+> Hosted [Model Context Protocol](https://modelcontextprotocol.io) server for AI visibility / GEO analytics — ask how AI engines mention, cite, rank, and describe your brand, and get measured data back, not guesses.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-preview-orange)](#roadmap)
+[![Status](https://img.shields.io/badge/status-live-brightgreen)](#installation)
+[![MCP Registry](https://img.shields.io/badge/MCP_Registry-de.auracite%2Fai--visibility-6e56cf)](https://registry.modelcontextprotocol.io/v0/servers?search=de.auracite/ai-visibility)
 
-## Status: Preview
+## Status: Live
 
-This repository tracks the public preview direction for AuraCite MCP-ready workflows. The goal is to expose **authorized AI visibility analytics** to supported MCP clients after package, endpoint, authentication, and customer documentation are ready.
+The AuraCite MCP server is in production:
 
-Target workflows include questions such as:
+- **Endpoint:** `https://auracite.de/mcp/rpc` (Streamable HTTP) · `https://auracite.de/mcp/sse` (SSE)
+- **Auth:** OAuth 2.0 with dynamic client registration — sign in with your AuraCite account, approve scoped access. No API keys to paste.
+- **Registry:** listed in the official MCP registry as [`de.auracite/ai-visibility`](https://registry.modelcontextprotocol.io/v0/servers?search=de.auracite/ai-visibility)
+- **Tools:** 45 read-mostly tools, all annotated (`readOnlyHint` / `destructiveHint`)
+- **Docs:** [auracite.de/mcp-integration.html](https://auracite.de/mcp-integration.html)
 
-> What is my brand's AI visibility score across ChatGPT and Perplexity?
+Example questions your agent can answer with it:
+
+> What is my brand's AI visibility score across ChatGPT, Gemini, and Perplexity?
 >
-> Which competitors do LLMs recommend instead of us?
+> Which competitors do LLMs recommend instead of us, and which sources do they cite?
 >
-> Show me the last 30 days of citation trend for Brand X.
+> Show me my Google Search Console top queries and the device/country breakdown for the last 30 days.
 
-...and get measured data back, not guesses.
+## Installation
 
-The production contract is still being finalized. Do not treat this repository as an installable npm package until a tagged release says so.
+### Claude Code (plugin)
 
-## Why MCP?
+```bash
+claude plugin marketplace add getauracite/claude-plugins
+claude plugin install auracite-agent-hub@auracite
+```
 
-LLMs can be unreliable when asked about brand authority. With MCP, AI agents can call authorized data sources instead of guessing.
+Then run `/mcp` to OAuth-connect. Plugin source: [getauracite/claude-plugins](https://github.com/getauracite/claude-plugins).
 
-## Current Status
+### Claude.ai / Claude Desktop (custom connector)
 
-- Public npm package: not generally advertised yet
-- Public self-service endpoint: not generally advertised yet
-- Access model: authorized packages and integrations
-- Contact: `g@auracite.de`
+Settings → Connectors → *Add custom connector* → URL `https://auracite.de/mcp/rpc` → sign in via OAuth.
 
-## Planned Installation Pattern
+### Cursor
 
-Once released, supported clients will receive package-specific setup instructions similar to:
+[![Add AuraCite to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=AuraCite&config=eyJ1cmwiOiJodHRwczovL2F1cmFjaXRlLmRlL21jcC9ycGMifQ==)
+
+Or manually in `~/.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
-    "auracite_geo": {
-      "configured_by": "AuraCite after API/MCP access is enabled"
+    "auracite": { "url": "https://auracite.de/mcp/rpc" }
+  }
+}
+```
+
+### OpenAI Codex (plugin)
+
+```bash
+codex plugin marketplace add getauracite/codex-plugins
+codex plugin add auracite-agent-hub@auracite-marketplace
+```
+
+Plugin source: [getauracite/codex-plugins](https://github.com/getauracite/codex-plugins).
+
+### Continue
+
+```yaml
+mcpServers:
+  - name: AuraCite
+    type: streamable-http
+    url: https://auracite.de/mcp/rpc
+```
+
+### Any other MCP client
+
+Generic config — Streamable HTTP with OAuth:
+
+```json
+{
+  "mcpServers": {
+    "auracite": {
+      "type": "http",
+      "url": "https://auracite.de/mcp/rpc"
     }
   }
 }
 ```
 
-Actual endpoint and authentication details will be published only after release.
+## Capability Areas
 
-## Planned Capability Areas
-
-- Visibility score retrieval for authorized brands
-- Competitor / Share of AI Voice summaries
-- Citation and source analysis
-- Mention tracking across configured engines
-- GEO recommendation summaries
-
-## Development
-
-Implementation details will be added after the public server contract is stable.
+- **AI visibility:** visibility score, AI engine breakdown, mentions, citations, share of voice, trends, brand comparison
+- **Search data:** Google Search Console top queries / top pages / search analytics / trend / country & device breakdown
+- **Competitive intelligence:** competitor lists, opportunity briefs, intelligence freshness and refresh status
+- **Workflow (guarded):** prompt catalog management, scan triggers, action handoffs, project memory — write/spend tools require explicit OAuth scopes (`mcp:write`, `mcp:spend`), server-issued confirmations, idempotency, and audit events
 
 ## Security
 
-- API keys are never logged
-- All requests over HTTPS/TLS
-- EU-hosted with GDPR-oriented processing
-Security policy details will be added with the first public implementation.
-
-## Roadmap
-
-- [ ] Public package release
-- [ ] Stable authentication model
-- [ ] `get_visibility_score`
-- [ ] `compare_competitors`
-- [ ] `get_citations`
-- [ ] `suggest_improvements`
-- [ ] `track_over_time`
-- [ ] Streaming responses for long queries
-- [ ] Rate-limit feedback via MCP
-- [ ] OAuth support (vs. API keys)
-
-## Contributing
-
-PRs will be welcome once the first public implementation is available.
+- OAuth 2.0 with dynamic client registration; scoped access (`mcp:read` by default)
+- Read-only by default — mutating, cost-bearing, admin, and bulk tools stay disabled without explicit scopes
+- Provider-spend tools are capped by CostGuard (hard daily limits) and per-call credit/USD caps
+- All requests over HTTPS/TLS; API keys (when used instead of OAuth) are never logged
+- EU-hosted with GDPR-oriented processing — [privacy](https://auracite.de/datenschutz) · [terms](https://auracite.de/terms)
 
 ## License
 
@@ -90,7 +107,7 @@ MIT
 
 ## About AuraCite
 
-[AuraCite](https://auracite.de) is an analytics platform for Generative Engine Optimization with MCP-ready workflows for brand visibility data.
+[AuraCite](https://auracite.de) is an analytics platform for Generative Engine Optimization (GEO): it tracks how ChatGPT, Gemini, Perplexity, and Google AI answers mention, rank, and cite brands — and turns that evidence into actions.
 
 - [auracite.de](https://auracite.de)
 - `g@auracite.de`
